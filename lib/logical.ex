@@ -1,18 +1,6 @@
 defmodule Logical do
-  @moduledoc """
-  Documentation for `Logical`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Logical.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def from_json(json) do
+    Jason.decode!(json)
+    |> Logical.Proposition.build()
   end
 end
