@@ -19,6 +19,10 @@ defmodule Logical.DataFrame do
     fn ldf -> Series.equal(ldf[proposition.field], cast_value(proposition.value, ldf)) end
   end
 
+  def greater_than(proposition) do
+    fn ldf -> Series.greater(ldf[proposition.field], cast_value(proposition.value, ldf)) end
+  end
+
   def cast_value(value, data_frame) when is_struct(value, Unary) do
     data_frame[value.field]
   end
