@@ -12,11 +12,11 @@ defmodule Logical.MapTest do
     matching = %{"foo" => 1}
     assert Map.match?(binary, matching)
 
-    non_matching = %{"foo" => 1}
-    assert Map.match?(binary, non_matching)
+    non_matching = %{"foo" => 2}
+    refute Map.match?(binary, non_matching)
   end
 
-  test "match?/2 operator" do
+  test "match?/2 connective and" do
     operator = %Connective{
       operator: "and",
       value: [
@@ -28,7 +28,10 @@ defmodule Logical.MapTest do
     matching = %{"foo" => 1, "bar" => 12}
     assert Map.match?(operator, matching)
 
+    non_matching = %{"foo" => 1, "bar" => 9}
+    refute Map.match?(operator, non_matching)
+
     non_matching = %{"foo" => 1}
-    assert Map.match?(operator, non_matching)
+    refute Map.match?(operator, non_matching)
   end
 end
