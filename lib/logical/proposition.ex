@@ -1,4 +1,9 @@
 defmodule Logical.Proposition do
+  defmodule Unary do
+    @enforce_keys [:field, :operator]
+    defstruct field: nil, operator: nil
+  end
+
   defmodule Binary do
     @enforce_keys [:field, :operator, :value]
     defstruct field: nil, operator: nil, value: nil
@@ -7,6 +12,12 @@ defmodule Logical.Proposition do
   defmodule Connective do
     @enforce_keys [:operator, :value]
     defstruct operator: nil, value: nil
+  end
+
+  @operators ["value"]
+  def build(%{"operator" => operator, "field" => field})
+      when operator in @operators do
+    %Unary{operator: operator, field: field}
   end
 
   @operators ["equal", "greater_than", "less_than"]

@@ -3,8 +3,19 @@ defmodule Logical.PropositionTest do
   doctest Logical.Proposition
 
   alias Logical.Proposition
+  alias Logical.Proposition.Unary
   alias Logical.Proposition.Binary
   alias Logical.Proposition.Connective
+
+  test "build unary" do
+    expectation = %Unary{operator: "value", field: "foo"}
+
+    assert expectation ==
+             Proposition.build(%{
+               "operator" => "value",
+               "field" => "foo"
+             })
+  end
 
   test "build binary" do
     expectation = %Binary{operator: "equal", field: "foo", value: 1}
