@@ -18,7 +18,7 @@ defmodule Logical.Map do
   end
 
   def (%Connective{} = proposition) and other do
-    Enum.map(proposition.value, &match?(&1, other)) |> Enum.all?
+    Enum.map(proposition.value, &match?(&1, other)) |> Enum.all?()
   end
 
   def equal(left, right) do
@@ -27,6 +27,7 @@ defmodule Logical.Map do
 
   def greater_than(nil, _right), do: false
   def greater_than(_left, nil), do: false
+
   def greater_than(left, right) do
     left > right
   end
