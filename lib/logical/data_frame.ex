@@ -14,7 +14,7 @@ defmodule Logical.DataFrame do
     K.apply(__MODULE__, operator, args)
   end
 
-  def conjunction(proposition, data_frame) do
+  def proposition and data_frame do
     Enum.map(proposition.value, &apply_impl(&1.operator, [&1, data_frame]))
     |> Enum.reduce(fn x, acc -> Series.and(acc, x) end)
   end
