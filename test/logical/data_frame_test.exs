@@ -4,11 +4,13 @@ defmodule Logical.DataFrameTest do
 
   alias Logical.Proposition.Unary
   alias Logical.Proposition.Binary
+  alias Logical.Proposition.Connective
   alias Logical.DataFrame, as: LDF
 
   alias Explorer.DataFrame, as: DF
+  #alias Explorer.Series
 
-  test "filter columns with equal comparison" do
+  test "filter/2 with equal comparison" do
     df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
 
     # df1 = DF.filter_with(df, fn ldf -> Series.equal(ldf["a"], 2) end)
@@ -39,11 +41,25 @@ defmodule Logical.DataFrameTest do
     assert DF.to_columns(df5, atom_keys: true) == %{a: [2], b: [2.0]}
   end
 
-  test "filter with greater_than inequality" do
+  test "filter/2 with greater_than inequality" do
     df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
 
     proposition = %Binary{operator: "greater_than", field: "b", value: 3.0}
     df1 = LDF.filter(proposition, df)
     assert DF.to_columns(df1, atom_keys: true) == %{a: [1], b: [5.3]}
+  end
+
+  test "filter/2 with conjunction connective" do
+    df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
+
+    proposition = %Connective{
+      operator: "conjunction",
+      value: [
+        %Binary{operator: "equal", field: "a", value: 2},
+        %Binary{operator: "greater_than", field: "b", value: 2.0}
+      ]
+    }
+    df1 = LDF.filter(proposition, df)
+    assert DF.to_columns(df1, atom_keys: true) == %{a: [2], b: [2.4]}
   end
 end

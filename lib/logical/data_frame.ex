@@ -1,33 +1,37 @@
 defmodule Logical.DataFrame do
   import Kernel, except: [and: 2, match?: 2]
+  alias Kernel, as: K
   alias Logical.Proposition.Unary
-  #alias Logical.Proposition
-  #alias Proposition.Connective
   alias Explorer.DataFrame, as: DF
   alias Explorer.Series
 
-  def filter(%{operator: operator} = proposition, other) do
-    DF.filter_with(other, apply_impl(operator, [proposition]))
+  def filter(%{operator: operator} = proposition, data_frame) do
+    DF.filter_with(data_frame, fn ldf -> apply_impl(operator, [proposition, ldf]) end)
   end
 
   def apply_impl(operator, args) do
     operator = String.to_existing_atom(operator)
-    apply(__MODULE__, operator, args)
+    K.apply(__MODULE__, operator, args)
   end
 
-  def equal(proposition) do
-    fn ldf -> Series.equal(ldf[proposition.field], cast_value(proposition.value, ldf)) end
+  def conjunction(proposition, data_frame) do
+    Enum.map(proposition.value, &apply_impl(&1.operator, [&1, data_frame]))
+    |> Enum.reduce(fn x, acc -> Series.and(acc, x) end)
   end
 
-  def greater_than(proposition) do
-    fn ldf -> Series.greater(ldf[proposition.field], cast_value(proposition.value, ldf)) end
+  def equal(proposition, data_frame) do
+    Series.equal(data_frame[proposition.field], cast_value(proposition.value, data_frame))
   end
 
-  def cast_value(value, data_frame) when is_struct(value, Unary) do
+  def greater_than(proposition, data_frame) do
+    Series.greater(data_frame[proposition.field], cast_value(proposition.value, data_frame))
+  end
+
+  def cast_value(value, data_frame) when K.is_struct(value, Unary) do
     data_frame[value.field]
   end
 
-  def cast_value(value, _data_frame) when is_list(value) do
+  def cast_value(value, _data_frame) when K.is_list(value) do
     Series.from_list(value)
   end
 
