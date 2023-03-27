@@ -1,5 +1,5 @@
 defmodule Logical.Map do
-  import Kernel, except: [and: 2, match?: 2]
+  import Kernel, except: [and: 2, or: 2, match?: 2]
   alias Logical.Proposition
   alias Proposition.Connective
   alias Proposition.Binary
@@ -19,6 +19,10 @@ defmodule Logical.Map do
 
   def (%Connective{} = proposition) and other do
     Enum.map(proposition.value, &match?(&1, other)) |> Enum.all?()
+  end
+
+  def (%Connective{} = proposition) or other do
+    Enum.map(proposition.value, &match?(&1, other)) |> Enum.any?()
   end
 
   def negate(other, %{negate: true}), do: !other

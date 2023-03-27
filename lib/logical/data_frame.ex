@@ -1,5 +1,5 @@
 defmodule Logical.DataFrame do
-  import Kernel, except: [and: 2, match?: 2]
+  import Kernel, except: [and: 2, or: 2]
   alias Kernel, as: K
   alias Logical.Proposition.Unary
   alias Explorer.DataFrame, as: DF
@@ -18,6 +18,11 @@ defmodule Logical.DataFrame do
   def proposition and data_frame do
     Enum.map(proposition.value, &apply_impl(&1.operator, [&1, data_frame]))
     |> Enum.reduce(fn x, acc -> Series.and(acc, x) end)
+  end
+
+  def proposition or data_frame do
+    Enum.map(proposition.value, &apply_impl(&1.operator, [&1, data_frame]))
+    |> Enum.reduce(fn x, acc -> Series.or(acc, x) end)
   end
 
   def negate(%{negate: true}, data_frame), do: Series.not(data_frame)

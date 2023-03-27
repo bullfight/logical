@@ -76,4 +76,19 @@ defmodule Logical.DataFrameTest do
     df1 = LDF.filter(proposition, df)
     assert DF.to_columns(df1, atom_keys: true) == %{a: [2], b: [2.4]}
   end
+
+  test "filter/2 with or connective" do
+    df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
+
+    proposition = %Connective{
+      operator: "or",
+      value: [
+        %Binary{operator: "equal", field: "a", value: 2},
+        %Binary{operator: "greater_than", field: "b", value: 2.0}
+      ]
+    }
+
+    df1 = LDF.filter(proposition, df)
+    assert DF.to_columns(df1, atom_keys: true) == %{a: [1, 2, 2], b: [5.3, 2.4, 2.0]}
+  end
 end

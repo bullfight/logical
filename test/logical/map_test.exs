@@ -44,4 +44,23 @@ defmodule Logical.MapTest do
     non_matching = %{"foo" => 1}
     refute Map.match?(operator, non_matching)
   end
+
+  test "match?/2 connective or" do
+    operator = %Connective{
+      operator: "or",
+      value: [
+        %Binary{operator: "equal", field: "foo", value: 1},
+        %Binary{operator: "greater_than", field: "bar", value: 10}
+      ]
+    }
+
+    matching = %{"foo" => 1, "bar" => 12}
+    assert Map.match?(operator, matching)
+
+    matching = %{"foo" => 1, "bar" => 9}
+    assert Map.match?(operator, matching)
+
+    non_matching = %{"foo" => 2}
+    refute Map.match?(operator, non_matching)
+  end
 end
