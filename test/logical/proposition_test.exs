@@ -8,23 +8,37 @@ defmodule Logical.PropositionTest do
   alias Logical.Proposition.Connective
 
   test "build unary" do
-    expectation = %Unary{operator: "value", field: "foo"}
+    expectation = %Unary{operator: "value", field: "foo", negate: false}
 
     assert expectation ==
              Proposition.build(%{
                "operator" => "value",
-               "field" => "foo"
+               "field" => "foo",
+               "negate" => false
              })
   end
 
   test "build binary" do
-    expectation = %Binary{operator: "equal", field: "foo", value: 1}
+    expectation = %Binary{operator: "equal", field: "foo", value: 1, negate: false}
 
     assert expectation ==
              Proposition.build(%{
                "operator" => "equal",
                "field" => "foo",
-               "value" => 1
+               "value" => 1,
+               "negate" => false
+             })
+  end
+
+  test "build negated binary" do
+    expectation = %Binary{operator: "equal", field: "foo", value: 1, negate: true}
+
+    assert expectation ==
+             Proposition.build(%{
+               "operator" => "equal",
+               "field" => "foo",
+               "value" => 1,
+               "negate" => true
              })
   end
 
@@ -34,7 +48,8 @@ defmodule Logical.PropositionTest do
       value: [
         %Binary{operator: "equal", field: "foo", value: 1},
         %Binary{operator: "equal", field: "bar", value: 10}
-      ]
+      ],
+      negate: false
     }
 
     assert expectation ==

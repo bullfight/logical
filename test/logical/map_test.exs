@@ -16,6 +16,16 @@ defmodule Logical.MapTest do
     refute Map.match?(binary, non_matching)
   end
 
+  test "match?/2 binary negate" do
+    binary = %Binary{operator: "equal", field: "foo", value: 1, negate: true}
+
+    matching = %{"foo" => 1}
+    refute Map.match?(binary, matching)
+
+    non_matching = %{"foo" => 2}
+    assert Map.match?(binary, non_matching)
+  end
+
   test "match?/2 connective and" do
     operator = %Connective{
       operator: "and",

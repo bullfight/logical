@@ -8,7 +8,6 @@ defmodule Logical.DataFrameTest do
   alias Logical.DataFrame, as: LDF
 
   alias Explorer.DataFrame, as: DF
-  #alias Explorer.Series
 
   test "filter/2 with equal comparison" do
     df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
@@ -36,9 +35,23 @@ defmodule Logical.DataFrameTest do
     assert DF.to_columns(df4, atom_keys: true) == %{a: [3], b: [1.0]}
 
     # df5 = DF.filter_with(df, fn ldf -> Series.equal(ldf["a"], ldf["b"]) end)
-    proposition = %Binary{operator: "equal", field: "a", value: %Unary{operator: "value", field: "b"}}
+    proposition = %Binary{
+      operator: "equal",
+      field: "a",
+      value: %Unary{operator: "value", field: "b"}
+    }
+
     df5 = LDF.filter(proposition, df)
     assert DF.to_columns(df5, atom_keys: true) == %{a: [2], b: [2.0]}
+  end
+
+  test "filter/2 with equal negation" do
+    df = DF.new(a: [1, 2, 3, 2], b: [5.3, 2.4, 1.0, 2.0])
+
+    # df1 = DF.filter_with(df, fn ldf -> Series.equal(ldf["a"], 2) end)
+    proposition = %Binary{operator: "equal", field: "a", value: 2, negate: true}
+    df1 = LDF.filter(proposition, df)
+    assert DF.to_columns(df1, atom_keys: true) == %{a: [1, 3], b: [5.3, 1.0]}
   end
 
   test "filter/2 with greater_than inequality" do
@@ -59,6 +72,7 @@ defmodule Logical.DataFrameTest do
         %Binary{operator: "greater_than", field: "b", value: 2.0}
       ]
     }
+
     df1 = LDF.filter(proposition, df)
     assert DF.to_columns(df1, atom_keys: true) == %{a: [2], b: [2.4]}
   end

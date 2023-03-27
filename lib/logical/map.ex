@@ -5,11 +5,11 @@ defmodule Logical.Map do
   alias Proposition.Binary
 
   def match?(%Connective{operator: operator} = proposition, other) do
-    apply_impl(operator, [proposition, other])
+    apply_impl(operator, [proposition, other]) |> negate(proposition)
   end
 
   def match?(%Binary{operator: operator} = proposition, other) do
-    apply_impl(operator, [other[proposition.field], proposition.value])
+    apply_impl(operator, [other[proposition.field], proposition.value]) |> negate(proposition)
   end
 
   def apply_impl(operator, args) do
@@ -20,6 +20,9 @@ defmodule Logical.Map do
   def (%Connective{} = proposition) and other do
     Enum.map(proposition.value, &match?(&1, other)) |> Enum.all?()
   end
+
+  def negate(other, %{negate: true}), do: !other
+  def negate(other, _), do: other
 
   def equal(left, right) do
     left == right
