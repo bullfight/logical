@@ -2,8 +2,8 @@ defmodule LogicalTest do
   use ExUnit.Case
   doctest Logical
 
-  alias Logical.Proposition.Binary
-  alias Logical.Proposition.Connective
+  alias Logical.Predicate.Binary
+  alias Logical.Predicate.Connective
 
   test "binary from_json" do
     expectation = %Binary{operator: "equal", field: "foo", value: 1}

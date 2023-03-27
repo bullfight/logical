@@ -1,4 +1,4 @@
-defmodule Logical.Proposition do
+defmodule Logical.Predicate do
   defmodule Unary do
     @enforce_keys [:field, :operator]
     defstruct field: nil, operator: nil, negate: false

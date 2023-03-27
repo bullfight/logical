@@ -1,17 +1,17 @@
-defmodule Logical.PropositionTest do
+defmodule Logical.PredicateTest do
   use ExUnit.Case
-  doctest Logical.Proposition
+  doctest Logical.Predicate
 
-  alias Logical.Proposition
-  alias Logical.Proposition.Unary
-  alias Logical.Proposition.Binary
-  alias Logical.Proposition.Connective
+  alias Logical.Predicate
+  alias Logical.Predicate.Unary
+  alias Logical.Predicate.Binary
+  alias Logical.Predicate.Connective
 
   test "build unary" do
     expectation = %Unary{operator: "value", field: "foo", negate: false}
 
     assert expectation ==
-             Proposition.build(%{
+             Predicate.build(%{
                "operator" => "value",
                "field" => "foo",
                "negate" => false
@@ -22,7 +22,7 @@ defmodule Logical.PropositionTest do
     expectation = %Binary{operator: "equal", field: "foo", value: 1, negate: false}
 
     assert expectation ==
-             Proposition.build(%{
+             Predicate.build(%{
                "operator" => "equal",
                "field" => "foo",
                "value" => 1,
@@ -34,7 +34,7 @@ defmodule Logical.PropositionTest do
     expectation = %Binary{operator: "equal", field: "foo", value: 1, negate: true}
 
     assert expectation ==
-             Proposition.build(%{
+             Predicate.build(%{
                "operator" => "equal",
                "field" => "foo",
                "value" => 1,
@@ -53,7 +53,7 @@ defmodule Logical.PropositionTest do
     }
 
     assert expectation ==
-             Proposition.build(%{
+             Predicate.build(%{
                "operator" => "and",
                "value" => [
                  %{

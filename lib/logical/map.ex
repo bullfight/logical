@@ -1,15 +1,15 @@
 defmodule Logical.Map do
   import Kernel, except: [and: 2, or: 2, match?: 2]
-  alias Logical.Proposition
-  alias Proposition.Connective
-  alias Proposition.Binary
+  alias Logical.Predicate
+  alias Predicate.Connective
+  alias Predicate.Binary
 
-  def match?(%Connective{operator: operator} = proposition, other) do
-    apply_impl(operator, [proposition, other]) |> negate(proposition)
+  def match?(%Connective{operator: operator} = predicate, other) do
+    apply_impl(operator, [predicate, other]) |> negate(predicate)
   end
 
-  def match?(%Binary{operator: operator} = proposition, other) do
-    apply_impl(operator, [other[proposition.field], proposition.value]) |> negate(proposition)
+  def match?(%Binary{operator: operator} = predicate, other) do
+    apply_impl(operator, [other[predicate.field], predicate.value]) |> negate(predicate)
   end
 
   def apply_impl(operator, args) do
@@ -17,12 +17,12 @@ defmodule Logical.Map do
     apply(__MODULE__, operator, args)
   end
 
-  def (%Connective{} = proposition) and other do
-    Enum.map(proposition.value, &match?(&1, other)) |> Enum.all?()
+  def (%Connective{} = predicate) and other do
+    Enum.map(predicate.value, &match?(&1, other)) |> Enum.all?()
   end
 
-  def (%Connective{} = proposition) or other do
-    Enum.map(proposition.value, &match?(&1, other)) |> Enum.any?()
+  def (%Connective{} = predicate) or other do
+    Enum.map(predicate.value, &match?(&1, other)) |> Enum.any?()
   end
 
   def negate(other, %{negate: true}), do: !other

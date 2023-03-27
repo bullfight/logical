@@ -1,6 +1,6 @@
 defmodule Logical do
   def from_json(json) do
     Jason.decode!(json)
-    |> Logical.Proposition.build()
+    |> Logical.Predicate.build()
   end
 end

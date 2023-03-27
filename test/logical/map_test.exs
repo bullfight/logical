@@ -2,8 +2,8 @@ defmodule Logical.MapTest do
   use ExUnit.Case
   doctest Logical.Map
 
-  alias Logical.Proposition.Binary
-  alias Logical.Proposition.Connective
+  alias Logical.Predicate.Binary
+  alias Logical.Predicate.Connective
   alias Logical.Map
 
   test "match?/2 binary" do
